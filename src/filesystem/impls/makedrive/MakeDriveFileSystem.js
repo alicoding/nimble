@@ -1,6 +1,5 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define, appshell, $, window */
-
 define(function (require, exports, module) {
     "use strict";
 
@@ -12,6 +11,36 @@ define(function (require, exports, module) {
         // since it requires a manual `grunt build` step in src/thirdparty/makedrive
         MakeDrive       = require("thirdparty/makedrive/client/dist/makedrive"),
         OpenDialog      = require("filesystem/impls/makedrive/open-dialog");
+    var WebmakerAuthClient            = require("thirdparty/webmaker-auth/webmaker-auth-client");
+
+    $.get("http://webmakerlogin.alicoding.com/csrfToken", function(data) {
+        var auth = new WebmakerAuthClient({
+          host: 'http://webmakerlogin.alicoding.com',
+          paths: {
+            authenticate: '/authenticate',
+            create: '/create',
+            verify: '/verify',
+            logout: '/logout'
+          },
+          csrfToken: data,
+          audience: window.location.origin,
+          prefix: 'webmaker-login', // for local storage
+          timeout: 10,
+          handleNewUserUI: true // Do you want to auto-open/close the new user UI?
+        });
+    })
+
+
+    // Attach event listeners!
+    auth.on('login', function(user, debuggingInfo) {
+      console.log('login', user, debuggingInfo);
+    });
+    auth.on('logout', function() {
+      console.log('logout');
+    });
+
+    // Run this function to automatically log-in users with a session set.
+    auth.verify();
 
     var fs              = MakeDrive.fs(),
         Path            = MakeDrive.Path,

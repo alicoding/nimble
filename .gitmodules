@@ -31,3 +31,15 @@
 [submodule "src/extensions/default/makedrive-sync-icon"]
 	path = src/extensions/default/makedrive-sync-icon
 	url = git@github.com:cdot-brackets-extensions/makedrive-sync-icon.git
+[submodule "src/thirdparty/webmaker-analytics"]
+	path = src/thirdparty/webmaker-analytics
+	url = git@github.com:mozilla/webmaker-analytics.git
+[submodule "src/thirdparty/cookie-js"]
+	path = src/thirdparty/cookie-js
+	url = git@github.com:cadecairos/cookie-js.git
+[submodule "src/thirdparty/eventEmitter"]
+	path = src/thirdparty/eventEmitter
+	url = git://github.com/fnobi/EventEmitter.git
+[submodule "src/thirdparty/eventEmitter2"]
+	path = src/thirdparty/eventEmitter2
+	url = https://github.com/Wolfy87/EventEmitter

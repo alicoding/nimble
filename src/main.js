@@ -32,9 +32,11 @@ require.config({
     paths: {
         "text"              : "thirdparty/text/text",
         "i18n"              : "thirdparty/i18n/i18n",
-        
+        "cookie": "thirdparty/cookie-js/cookie",
+        "analytics"         : "thirdparty/webmaker-analytics/analytics",
         // The file system implementation. Change this value to use different 
         // implementations (e.g. cloud-based storage).
+        "EventEmitter"      : "thirdparty/eventEmitter2/EventEmitter",
         "fileSystemImpl"    : "filesystem/impls/makedrive/MakeDriveFileSystem"
     }
 });
