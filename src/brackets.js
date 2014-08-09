@@ -430,7 +430,8 @@ define(function (require, exports, module) {
         var real_windowOpen = window.open;
         window.open = function (url) {
             // Allow file:// URLs, relative URLs (implicitly file: also), and about:blank
-            if (!url.match(/^file:\/\//) && url !== "about:blank" && url.indexOf(":") !== -1) {
+            console.log(url)
+            if (!url.match(/^file:\/\//) && url !== "about:blank" && url.indexOf(":") !== -1 && url.indexOf("https://login.persona.org/sign_in") < 0) {
                 throw new Error("Brackets-shell is not a secure general purpose web browser. Use NativeApp.openURLInDefaultBrowser() to open URLs in the user's main browser");
             }
             return real_windowOpen.apply(window, arguments);

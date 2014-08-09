@@ -12,10 +12,13 @@ define(function (require, exports, module) {
         MakeDrive       = require("thirdparty/makedrive/client/dist/makedrive"),
         OpenDialog      = require("filesystem/impls/makedrive/open-dialog");
     var WebmakerAuthClient            = require("thirdparty/webmaker-auth/webmaker-auth-client");
-
-    $.get("http://webmakerlogin.alicoding.com/csrfToken", function(data) {
+    var fs              = MakeDrive.fs(),
+        Path            = MakeDrive.Path,
+        watchers        = {};
+    var alreadyConnected = false;
+    $.get("http://localhost:3000/csrfToken", function(data) {
         var auth = new WebmakerAuthClient({
-          host: 'http://webmakerlogin.alicoding.com',
+          host: 'http://localhost:3000',
           paths: {
             authenticate: '/authenticate',
             create: '/create',
@@ -28,23 +31,60 @@ define(function (require, exports, module) {
           timeout: 10,
           handleNewUserUI: true // Do you want to auto-open/close the new user UI?
         });
-    })
 
+        // Attach event listeners!
+        auth.on('login', function(user) {
+          setTimeout(function() {
+            if(!alreadyConnected) {
+                $.ajax({
+                   url: "http://localhost:9090/api/sync",
+                   type: "GET",
+                   xhrFields: {
+                      withCredentials: true
+                   },
+                   statusCode: {
+                       401: function() {
+                         onError();
+                       }
+                     }
+                }).done(function( data, d ) {
+                if ( console && console.log ) {
+                    alreadyConnected = true;
+                    fs.sync.connect('ws://localhost:9090', data);
+                }
+              });
+            }
+          }, 1000);
 
-    // Attach event listeners!
-    auth.on('login', function(user, debuggingInfo) {
-      console.log('login', user, debuggingInfo);
+        });
+        auth.on('logout', function() {
+          console.log('logout');
+        });
+        // auth.login();
+        auth.verify();
+        var sync = fs.sync;
+
+        // Try to upgrade to a syncing filesystem
+        function onError() {
+            auth.login();
+        }
+        //TODO: Do we want to do anything other than console.log for all these events?
+        sync.on('syncing', function() {
+            console.log('sync started');
+        });
+        sync.on('error', function(e) {
+            console.log('sync error: ', e);
+        });
+        sync.on('completed', function() {
+            console.log('sync completed');
+        });
+        sync.on('updates', function() {
+            console.log('server has updates');
+        });
+
+        // Run this function to automatically log-in users with a session set.
     });
-    auth.on('logout', function() {
-      console.log('logout');
-    });
-
-    // Run this function to automatically log-in users with a session set.
-    auth.verify();
-
-    var fs              = MakeDrive.fs(),
-        Path            = MakeDrive.Path,
-        watchers        = {};
+   
 
     var _changeCallback;            // Callback to notify FileSystem of watcher changes
 
@@ -52,24 +92,6 @@ define(function (require, exports, module) {
     // needs to call sync.connect(serverURL) when the user is logged in, for example.
     appshell.MakeDrive = MakeDrive;
 
-    var sync = fs.sync;
-
-    // Try to upgrade to a syncing filesystem
-    sync.connect('ws://localhost:9090');
-
-    //TODO: Do we want to do anything other than console.log for all these events?
-    sync.on('syncing', function() {
-        console.log('sync started');
-    });
-    sync.on('error', function(e) {
-        console.log('sync error: ', e);
-    });
-    sync.on('completed', function() {
-        console.log('sync completed');
-    });
-    sync.on('updates', function() {
-        console.log('server has updates');
-    });
 
     function showOpenDialog(allowMultipleSelection, chooseDirectories, title, initialPath, fileTypes, callback) {
         OpenDialog.showOpenDialog.apply(null, arguments);
