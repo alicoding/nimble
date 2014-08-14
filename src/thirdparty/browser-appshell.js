@@ -45,7 +45,7 @@
       functionNotImplemented();
     },
     getApplicationSupportDirectory: function() {
-      return '/ApplicationSupport';
+      return '/';
     },
     getDroppedFiles: function(callback) {
       functionNotImplemented();
