@@ -25,12 +25,3 @@
 [submodule "src/extensions/default/JSLint/thirdparty/jslint"]
 	path = src/extensions/default/JSLint/thirdparty/jslint
 	url = https://github.com/douglascrockford/JSLint.git
-[submodule "src/thirdparty/makedrive"]
-	path = src/thirdparty/makedrive
-	url = https://github.com/mozilla/makedrive.git
-[submodule "src/extensions/default/makedrive-sync-icon"]
-	path = src/extensions/default/makedrive-sync-icon
-	url = git@github.com:cdot-brackets-extensions/makedrive-sync-icon.git
-[submodule "src/thirdparty/filer-dialogs"]
-	path = src/thirdparty/filer-dialogs
-	url = git://github.com/ScottDowne/filer-dialogs.git
