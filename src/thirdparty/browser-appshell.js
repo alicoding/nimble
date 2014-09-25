@@ -45,7 +45,8 @@
       functionNotImplemented();
     },
     getApplicationSupportDirectory: function() {
-      return '/ApplicationSupport';
+      // HACK: we need to figure out where to put application data, and whether to sync
+      return '/';
     },
     getDroppedFiles: function(callback) {
       functionNotImplemented();
